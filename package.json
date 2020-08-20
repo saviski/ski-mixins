@@ -1,0 +1,29 @@
+{
+  "name": "@ski/mixins",
+  "version": "0.1.0",
+  "description": "custom elements javascript class extensions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saviski/ski-mixins.git"
+  },
+  "keywords": [
+    "custom",
+    "elements",
+    "web",
+    "components",
+    "class",
+    "mixin",
+    "typescript",
+    "javascript"
+  ],
+  "author": "saviski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/saviski/ski-mixins/issues"
+  },
+  "homepage": "https://github.com/saviski/ski-mixins#readme"
+}
