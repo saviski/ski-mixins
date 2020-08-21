@@ -1,0 +1,8 @@
+/.vscode
+/node_modules
+/pnpm-lock.yaml
+/mixins.js
+/mixins.min.js
+/mixins.min.js.map
+/.types
+/js
