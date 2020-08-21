@@ -4,7 +4,7 @@
   "description": "custom elements javascript class extensions",
   "module": "mixins.js",
   "main": "mixins.min.js",
-  "types": ".types/index.d.ts",
+  "types": "src/index.ts",
   "scripts": {
     "build": "run-s clean build:*",
     "watch": "run-p \"build:* -- --watch\"",
@@ -33,9 +33,6 @@
     "email": "marcelo@saviski.dev"
   },
   "homepage": "https://github.com/saviski/ski-mixins#readme",
-  "dependencies": {
-    "param-case": "^3.0.3"
-  },
   "prettier": {
     "printWidth": 90,
     "semi": false,
@@ -46,6 +43,7 @@
     "singleQuote": true
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^9.0.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "rollup": "^2.26.4",
@@ -57,7 +55,9 @@
   "files": [
     ".types",
     "js",
-    "ski-mixins.min.js",
-    "ski-mixins.min.js.map"
+    "src",
+    "mixins.js",
+    "mixins.min.js",
+    "mixins.min.js.map"
   ]
 }

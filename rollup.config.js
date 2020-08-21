@@ -9,15 +9,14 @@ export default [
       file: pkg.main
     },
     plugins: [
-      typescript({
-        useTsconfigDeclarationDir: true
-      }),
+      typescript(),
       terser({
         output: {
           comments: false
         }
       })
-    ]
+    ],
+    external: Object.keys(pkg.dependencies)
   },
   {
     input: 'src/index.ts',
@@ -25,9 +24,8 @@ export default [
       file: pkg.module
     },
     plugins: [
-      typescript({
-        useTsconfigDeclarationDir: true
-      })
-    ]
+      typescript()
+    ],
+    external: Object.keys(pkg.dependencies)
   }
 ]

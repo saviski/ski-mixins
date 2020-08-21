@@ -1,21 +1,22 @@
-import { paramCase } from "param-case"
+const dashCase = (name: string) => name.replace(/([A-Z])/g, '-$1').toLowerCase()
 
 export function mixinAttributes(superclass: typeof Element) {
-
   const extendedClass = class extends superclass {
     static observedAttributes: string[] = []
 
     attributeChanged!: Record<string, (v: string | null) => void>
 
     static defineAttribute(name: string, descriptor?: PropertyDescriptor) {
-      const dashedName = paramCase(name)
+      const dashedName = dashCase(name)
       this.observedAttributes.push(dashedName)
 
       descriptor &&
         descriptor.set &&
         (this.prototype.attributeChanged[name] = descriptor.set)
 
-      const newDescriptor = <ThisType<InstanceType<typeof extendedClass>> & PropertyDescriptor>{
+      const newDescriptor = <
+        ThisType<InstanceType<typeof extendedClass>> & PropertyDescriptor
+      >{
         get() {
           return (
             this.getAttribute(dashedName) ??
@@ -40,11 +41,10 @@ export function mixinAttributes(superclass: typeof Element) {
 
     static defined(element: Element) {
       const result = element.matches(':defined')
-      result && Object.defineProperty(
-        extendedClass,
-        'defined', {
-        value: () => true
-      })
+      result &&
+        Object.defineProperty(extendedClass, 'defined', {
+          value: () => true,
+        })
       return result
     }
 

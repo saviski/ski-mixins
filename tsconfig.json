@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "target": "es2015",
+    "target": "es2018",
     "module": "esnext",
     "lib": [
       "dom",
-      "es2020"
+      "es2020",
+      "esnext.asynciterable"
     ],
-    "declaration": true,
-    "declarationDir": ".types",
     "outDir": "js",
     "strict": true,
     "noImplicitAny": true,

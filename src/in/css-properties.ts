@@ -1,6 +1,6 @@
-import { paramCase } from "param-case"
+const dashCase = (name: string) => name.replace(/([A-Z])/g, '-$1').toLowerCase()
 
-const cssvar = (property: string) => '--' + paramCase(property)
+const cssvar = (property: string) => '--' + dashCase(property)
 
 const hiddenStyle = `position:absolute;width:0px;height:0px;overflow:hidden;pointer-events:none`
 

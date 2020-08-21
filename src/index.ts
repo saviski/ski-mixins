@@ -1,12 +1,12 @@
-import { Mixin, Mix, MixinWith, MixinConstructor } from './types'
+import { inject } from './inject'
+import { Mix, Mixin, MixinConstructor, MixinWith } from './types'
+import { ElementWithAttributes } from './with/attributes'
 import attributes from './with/attributes.js'
 import baseURI from './with/base-uri'
-import cssProperties from './with/css-properties'
+import content from './with/content'
+import cssProperties, { CSSObservers } from './with/css-properties'
 import elements from './with/elements'
 import html from './with/html'
-import content from './with/content'
-import skitemplate from './with/ski-template'
-import watchClass from './with/watch-class'
 
 type C = MixinConstructor
 
@@ -56,9 +56,13 @@ export {
   attributes,
   baseURI,
   cssProperties,
+  CSSObservers,
   elements,
   html,
   content,
-  skitemplate,
-  watchClass,
+  inject,
+  ElementWithAttributes,
+  MixinConstructor,
+  MixinWith,
+  Mixin
 }
