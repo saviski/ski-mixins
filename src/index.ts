@@ -1,12 +1,12 @@
-import { inject } from './inject'
-import { Mix, Mixin, MixinConstructor, MixinWith } from './types'
-import { ElementWithAttributes } from './with/attributes'
+import { inject } from './inject.js'
+import { Mix, Mixin, MixinConstructor, MixinWith } from './types.js'
+import { ElementWithAttributes } from './with/attributes.js'
 import attributes from './with/attributes.js'
-import baseURI from './with/base-uri'
-import content from './with/content'
-import cssProperties, { CSSObservers } from './with/css-properties'
-import elements from './with/elements'
-import html from './with/html'
+import baseURI from './with/base-uri.js'
+import content from './with/content.js'
+import cssProperties, { CSSObservers } from './with/css-properties.js'
+import elements from './with/elements.js'
+import html from './with/html.js'
 
 type C = MixinConstructor
 
@@ -64,5 +64,5 @@ export {
   ElementWithAttributes,
   MixinConstructor,
   MixinWith,
-  Mixin
+  Mixin,
 }

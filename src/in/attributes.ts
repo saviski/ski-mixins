@@ -18,17 +18,15 @@ export function mixinAttributes(superclass: typeof Element) {
         ThisType<InstanceType<typeof extendedClass>> & PropertyDescriptor
       >{
         get() {
-          return (
-            this.getAttribute(dashedName) ??
-            descriptor?.get?.call(this) ??
-            descriptor?.value
-          )
+          return this.getAttribute(dashedName) ?? this.hasAttribute(dashedName)
+            ? true
+            : descriptor?.get?.call(this) ?? descriptor?.value
         },
 
-        set(value: string) {
+        set(value: any) {
           extendedClass.defined(this)
             ? value !== null && value !== undefined
-              ? this.setAttribute(dashedName, value)
+              ? this.setAttribute(dashedName, value === true ? '' : value)
               : this.removeAttribute(dashedName)
             : (descriptor = { value })
         },

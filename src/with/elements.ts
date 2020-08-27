@@ -1,4 +1,4 @@
-import { Mixin, MixinConstructor, Mix } from '../types'
+import { Mixin, MixinConstructor, Mix } from '../types.js'
 
 export type Elements<T> = {
   readonly [A in keyof T]: Element

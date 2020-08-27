@@ -1,4 +1,4 @@
-import { Mixin } from '../types'
+import { Mixin } from '../types.js'
 import { mixinCssProperties } from '../in/css-properties.js'
 
 export type CSSPropertiesDefinition<T> = { [K in keyof T]: string }

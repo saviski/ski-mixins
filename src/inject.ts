@@ -1,15 +1,15 @@
-import { Mixin } from './types'
+import { Mixin } from './types.js'
 
 /**
- * Modifies obect prototype chain and inserts a mixin on any
+ * Modifies object prototype chain and inserts a mixin on any
  * existing class definition.
  * ```
  * class AnyClass extends OtherClass
- * 
+ *
  * inject(AnyClass.prototype, mixin)
- * 
+ *
  * // is equivalent to
- * 
+ *
  * class Mixin extends OtherClass
  * class AnyClass extends Mixins
  * ```

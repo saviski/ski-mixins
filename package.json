@@ -2,15 +2,15 @@
   "name": "@ski/mixins",
   "version": "0.1.0",
   "description": "custom elements javascript class extensions",
+  "type": "module",
+  "main": "mixins.js",
   "module": "mixins.js",
-  "main": "mixins.min.js",
   "types": "src/index.ts",
   "scripts": {
     "build": "run-s clean build:*",
     "watch": "run-p \"build:* -- --watch\"",
     "clean": "rimraf js .types",
-    "build:bundle": "rollup -c",
-    "build:typescript": "ttsc"
+    "build:bundle": "rollup -c"
   },
   "repository": {
     "type": "git",

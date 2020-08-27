@@ -1,4 +1,4 @@
-import { Mixin } from '../types'
+import { Mixin } from '../types.js'
 import { mixinAttributes } from '../in/attributes.js'
 
 export interface ElementWithAttributes {
@@ -9,7 +9,7 @@ export interface ElementWithAttributes {
   ): PropertyDescriptor | void
 }
 
-export type ElementAttributes<T> = { [K in keyof T]?: string }
+export type ElementAttributes<T> = { [K in keyof T]?: string | boolean }
 
 export default function attributes<T>(
   properties: ElementAttributes<T>

@@ -1,4 +1,4 @@
-import { Mixin } from '../types'
+import { Mixin } from '../types.js'
 
 export default function content(
   contentFragment: DocumentFragment
