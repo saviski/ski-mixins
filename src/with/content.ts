@@ -1,18 +1,9 @@
-import { Mixin } from '../types.js'
-
-export default function content(
-  contentFragment: DocumentFragment
-): Mixin<CustomElementConstructor> {
-  return superclass =>
+export function content(contentFragment: DocumentFragment) {
+  return <T extends CustomElementConstructor>(superclass: T) =>
     class extends superclass {
-      get shadowRoot() {
-        return super.shadowRoot || this.attachShadowContent()
-      }
-
-      private attachShadowContent() {
-        const root = this.attachShadow({ mode: 'open' })
-        root.append(contentFragment.cloneNode(true))
-        return root
+      constructor(...args: any[]) {
+        super(...args)
+        this.attachShadow({ mode: 'open' }).append(contentFragment.cloneNode(true))
       }
     }
 }

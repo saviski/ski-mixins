@@ -1,7 +1,7 @@
-import rootContent from './content.js'
+import { content } from './content.js'
 
-export default function html(innerHTML: string) {
+export function htmlContent(innerHTML: string) {
   const htmltemplate = document.createElement('template')
   htmltemplate.innerHTML = innerHTML
-  return rootContent(htmltemplate.content)
+  return content(htmltemplate.content)
 }

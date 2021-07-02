@@ -1,32 +1,11 @@
-import { Mixin, MixinConstructor, Mix } from '../types.js'
+import { mixinElements } from '../in/elements.js'
 
-export type Elements<T> = {
-  readonly [A in keyof T]: Element
-}
+export function elements<T extends Record<string, string>>(selectors: T) {
+  return <E extends CustomElementConstructor>(elementClass: E) => {
+    let elementsClass = mixinElements(elementClass)
 
-export type ElementsQuery<T> = {
-  readonly [K in keyof T]: string
-}
+    for (const [name, selector] of Object.entries<string>(selectors)) elementsClass.defineElement(name, selector)
 
-const withElements = <T>(
-  superclass: CustomElementConstructor,
-  selectors: ElementsQuery<T>
-) =>
-  class extends superclass {
-    constructor(...args: any[]) {
-      super(...args)
-      for (const [name, selector] of Object.entries<string>(selectors))
-        Object.defineProperty(this, name, {
-          get(this: Element) {
-            return this.shadowRoot?.querySelector(selector)
-          },
-          enumerable: true,
-        })
-    }
-  } as Mix<typeof superclass, MixinConstructor<Elements<T>>>
-
-export default function elements<T>(
-  selectors: ElementsQuery<T>
-): Mixin<CustomElementConstructor, Elements<T>> {
-  return superclass => withElements(superclass, selectors)
+    return elementsClass as typeof elementsClass & (new (...args: any) => Record<keyof T, HTMLElement>)
+  }
 }

@@ -1,13 +1,5 @@
-import { Mixin } from '../types.js'
-
-export interface RelativeURL {
-  relativeURL(url: string): string
-}
-
-export default function baseURI(
-  value: string
-): Mixin<CustomElementConstructor, RelativeURL> {
-  return superclass =>
+export function baseURI(value: string) {
+  return <T extends CustomElementConstructor>(superclass: T) =>
     class extends superclass {
       attachShadow(init: ShadowRootInit) {
         const root = super.attachShadow(init)

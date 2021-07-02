@@ -1,56 +1,61 @@
 const dashCase = (name: string) => name.replace(/([A-Z])/g, '-$1').toLowerCase()
 
-export function mixinAttributes(superclass: typeof Element) {
-  const extendedClass = class extends superclass {
-    static observedAttributes: string[] = []
+type AttributeSetter = ((v: string | null) => void) | undefined
 
-    attributeChanged!: Record<string, (v: string | null) => void>
+export type AttributesMixin = ReturnType<typeof mixinAttributes>
 
-    static defineAttribute(name: string, descriptor?: PropertyDescriptor) {
-      const dashedName = dashCase(name)
-      this.observedAttributes.push(dashedName)
+export function mixinAttributes<T extends CustomElementConstructor>(superclass: T): typeof attributesMixin & T {
+  if (superclass.hasOwnProperty('defineAttribute')) return <any>superclass
 
-      descriptor &&
-        descriptor.set &&
-        (this.prototype.attributeChanged[name] = descriptor.set)
+  const superclassAttributes = <Partial<AttributesMixin>>superclass
 
-      const newDescriptor = <
-        ThisType<InstanceType<typeof extendedClass>> & PropertyDescriptor
-      >{
-        get() {
-          return this.getAttribute(dashedName) ?? this.hasAttribute(dashedName)
-            ? true
-            : descriptor?.get?.call(this) ?? descriptor?.value
-        },
-
-        set(value: any) {
-          extendedClass.defined(this)
-            ? value !== null && value !== undefined
-              ? this.setAttribute(dashedName, value === true ? '' : value)
-              : this.removeAttribute(dashedName)
-            : (descriptor = { value })
-        },
-
-        enumerable: descriptor?.enumerable ?? true,
-      }
-      Object.defineProperty(this.prototype, name, newDescriptor)
-      return newDescriptor
+  const attributesMixin = class extends superclass {
+    //
+    static get observedAttributes(): ReadonlyArray<string> {
+      return [...this.attributeChanged.keys()]
     }
 
-    static defined(element: Element) {
+    static attributeChanged: Map<string, AttributeSetter> = new Map(superclassAttributes.attributeChanged!)
+
+    static defineAttribute(attribute: string, { get, set, value }: PropertyDescriptor = {}) {
+      let dashedName = dashCase(attribute)
+
+      this.attributeChanged.set(dashedName, set)
+
+      let defaultvalue = get?.call(this) ?? value
+
+      function getter(this: Element) {
+        return this.getAttribute(dashedName) ?? this.hasAttribute(dashedName) ? true : defaultvalue
+      }
+
+      function setter(this: Element, value: any) {
+        // elementAttributes.isDefined!(this) ?
+        typeof value == 'string'
+          ? this.setAttribute(dashedName, value)
+          : value === true
+          ? this.setAttribute(dashedName, '')
+          : this.removeAttribute(dashedName)
+        // : (defaultvalue = value)
+      }
+
+      Object.defineProperty(this.prototype, attribute, {
+        get: getter,
+        set: setter,
+        enumerable: true,
+        configurable: true,
+      })
+    }
+
+    static isDefined?(element: Element) {
       const result = element.matches(':defined')
-      result &&
-        Object.defineProperty(extendedClass, 'defined', {
-          value: () => true,
-        })
+      result && delete this.isDefined && (this.isDefined = () => true)
       return result
     }
 
     attributeChangedCallback(name: string, old: string | null, value: string | null) {
-      if (old != value) this.attributeChanged[name]?.call(this, value)
+      if (old != value) attributesMixin.attributeChanged.get(name)?.call(this, value)
     }
   }
 
-  extendedClass.prototype.attributeChanged = {}
-  return extendedClass
+  return attributesMixin
 }

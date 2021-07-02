@@ -1,21 +1,50 @@
 const dashCase = (name: string) => name.replace(/([A-Z])/g, '-$1').toLowerCase()
-
 const cssvar = (property: string) => '--' + dashCase(property)
 
 const hiddenStyle = `position:absolute;width:0px;height:0px;overflow:hidden;pointer-events:none`
 
-export function mixinCssProperties(superclass: CustomElementConstructor) {
-  const extendedClass = class extends superclass {
-    // prototype property
-    cssPropertyChanged!: Record<string, (v: string) => void>
+type CssPropertySetter = ((v: string) => void) | undefined
+
+export type CssPropertiesMixin = ReturnType<typeof mixinCssProperties>
+
+export function mixinCssProperties<T extends CustomElementConstructor>(superclass: T): typeof cssPropertiesMixin & T {
+  if (superclass.hasOwnProperty('defineCSSProperty')) return <any>superclass
+
+  const superclassCssProperties = <Partial<CssPropertiesMixin>>superclass
+
+  const cssPropertiesMixin = class extends superclass {
+    //
+
+    static cssPropertyChanged: Map<string, CssPropertySetter> = new Map(superclassCssProperties.cssPropertyChanged!)
+
+    static defineCSSProperty(name: string, { set }: PropertyDescriptor = {}, _syntax = '*') {
+      const dashedName = cssvar(name)
+
+      this.cssPropertyChanged.set(dashedName, set)
+
+      function getter(this: HTMLElement) {
+        return getComputedStyle(this).getPropertyValue(dashedName)
+      }
+
+      function setter(this: HTMLElement, value: string) {
+        this.style.setProperty(dashedName, value)
+      }
+
+      Object.defineProperty(this.prototype, name, {
+        get: getter,
+        set: setter,
+        enumerable: true,
+        configurable: true,
+      })
+    }
+
     cssObserverHost: HTMLElement
     cssPropertyChangedCallback?(name: string, old?: string, value?: string): void
 
     constructor(...args: any[]) {
       super(...args)
       this.cssObserverHost = this.createCssObserverHost()
-      for (const property of new.target.observedCSSProperties)
-        this.observeCssProperty(property)
+      for (const property of new.target.cssPropertyChanged.keys()) this.observeCssProperty(property)
     }
 
     observeCssProperty(property: string, _syntax = '<number>') {
@@ -48,40 +77,10 @@ export function mixinCssProperties(superclass: CustomElementConstructor) {
     }
 
     notifyCssPropertyChange(property: string, value: string, oldvalue?: string) {
-      this.cssPropertyChanged[property]?.call(this, value)
+      cssPropertiesMixin.cssPropertyChanged.get(property)?.call(this, value)
       this.cssPropertyChangedCallback?.(property, oldvalue, value)
-    }
-
-    static observedCSSProperties: string[] = []
-
-    static defineCSSProperty(
-      property: string,
-      descriptor?: PropertyDescriptor,
-      _syntax = '*'
-    ) {
-      const name = cssvar(property)
-      this.observedCSSProperties.push(name)
-
-      descriptor &&
-        descriptor.set &&
-        (this.prototype.cssPropertyChanged[name] = descriptor.set)
-
-      const newDescriptor = <ThisType<HTMLElement>>{
-        get() {
-          return getComputedStyle(this).getPropertyValue(name)
-        },
-        set(value: string) {
-          this.style.setProperty(name, value)
-        },
-
-        enumerable: descriptor?.enumerable ?? true,
-      }
-
-      Object.defineProperty(this.prototype, property, newDescriptor)
-      return newDescriptor
     }
   }
 
-  extendedClass.prototype.cssPropertyChanged = {}
-  return extendedClass
+  return cssPropertiesMixin
 }
