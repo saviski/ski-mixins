@@ -5,8 +5,6 @@ type AttributeSetter = ((v: string | null) => void) | undefined
 export type AttributesMixin = ReturnType<typeof mixinAttributes>
 
 export function mixinAttributes<T extends CustomElementConstructor>(superclass: T): typeof attributesMixin & T {
-  if (superclass.hasOwnProperty('defineAttribute')) return <any>superclass
-
   const superclassAttributes = <Partial<AttributesMixin>>superclass
 
   const attributesMixin = class extends superclass {

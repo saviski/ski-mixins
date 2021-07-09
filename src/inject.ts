@@ -95,7 +95,7 @@ export function init<T extends new (...params: any) => any>(
   fn: (self: InstanceType<T>, ...args: ConstructorParameters<T>) => void
 ) {
   inject(
-    constructor.prototype,
+    constructor,
     superclass =>
       class extends superclass {
         constructor(...args: any[]) {

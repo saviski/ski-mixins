@@ -1,8 +1,6 @@
 export type ElementsMixin = ReturnType<typeof mixinElements>
 
 export function mixinElements<T extends CustomElementConstructor>(superclass: T): typeof elementsMixin & T {
-  if (superclass.hasOwnProperty('defineElements')) return <any>superclass
-
   const elementsMixin = class extends superclass {
     //
     static defineElement(name: string, selector: string) {

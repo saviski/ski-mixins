@@ -8,13 +8,10 @@ type CssPropertySetter = ((v: string) => void) | undefined
 export type CssPropertiesMixin = ReturnType<typeof mixinCssProperties>
 
 export function mixinCssProperties<T extends CustomElementConstructor>(superclass: T): typeof cssPropertiesMixin & T {
-  if (superclass.hasOwnProperty('defineCSSProperty')) return <any>superclass
-
   const superclassCssProperties = <Partial<CssPropertiesMixin>>superclass
 
   const cssPropertiesMixin = class extends superclass {
     //
-
     static cssPropertyChanged: Map<string, CssPropertySetter> = new Map(superclassCssProperties.cssPropertyChanged!)
 
     static defineCSSProperty(name: string, { set }: PropertyDescriptor = {}, _syntax = '*') {

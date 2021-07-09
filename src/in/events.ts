@@ -7,13 +7,11 @@ export type InlineEventListener<T = any> =
   | null
   | undefined
 
-export type InlineEventName<S extends string = string> = `on${S}`
+export type InlineEventName<S extends string = string> = Lowercase<`on${S}`>
 
 export const $inlineEvents = Symbol('inlineEvents')
 
 export function mixinEvents<T extends CustomElementConstructor>(superclass: T): typeof eventsMixin & T {
-  if (superclass.hasOwnProperty('defineAttribute')) return <any>superclass
-
   const eventsMixin = class extends mixinAttributes(superclass) {
     //
     [$inlineEvents]: Map<string, InlineEventListener<Event>> = new Map(this[$inlineEvents])
