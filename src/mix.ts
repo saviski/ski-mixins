@@ -12,10 +12,7 @@ export type Mix<T extends Class[]> = T extends [infer C, ...infer R]
       : never
     : never
   : never
-
-export type Mixin<T extends Class, U extends Class> = (superclass: T) => Mix<[T, U]>
-
-export class MixinWith<T extends Class> {
+export class Mixin<T extends Class> {
   //
   constructor(private superclass: T) {}
 

@@ -23,7 +23,7 @@ export function mixinAttributes<T extends CustomElementConstructor>(superclass: 
       let defaultvalue = get?.call(this) ?? value
 
       function getter(this: Element) {
-        return this.getAttribute(dashedName) ?? this.hasAttribute(dashedName) ? true : defaultvalue
+        return this.getAttribute(dashedName) ?? (this.hasAttribute(dashedName) ? true : defaultvalue)
       }
 
       function setter(this: Element, value: any) {

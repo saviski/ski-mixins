@@ -5,12 +5,13 @@
   "type": "module",
   "main": "mixins.js",
   "module": "mixins.js",
-  "types": "mixins.d.ts",
+  "types": "mixins.ts",
   "scripts": {
     "build": "run-s clean build:*",
     "watch": "run-p \"build:* -- --watch\"",
     "clean": "rimraf js .types",
-    "build:bundle": "rollup -c"
+    "build:bundle": "rollup -c",
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",
