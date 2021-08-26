@@ -8,9 +8,16 @@ export function mixinElements<T extends CustomElementConstructor>(superclass: T)
         get(this: Element) {
           return this.shadowRoot?.querySelector(selector)
         },
+
         enumerable: true,
         configurable: true,
       })
+    }
+
+    attachShadow(init: ShadowRootInit) {
+      let root = super.attachShadow(init)
+
+      return root
     }
   }
 
